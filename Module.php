@@ -74,7 +74,7 @@ class Module implements AutoloaderProvider
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ),
                 'prefixes' => array(
-                    'Twig' => __DIR__ . '/vendor/Twig'
+                    'Twig' => __DIR__ . '/vendor/Twig/lib/Twig'
                 )
             ),
         );
