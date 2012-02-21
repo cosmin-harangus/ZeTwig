@@ -111,10 +111,13 @@ class Environment extends Twig_Environment implements Pluggable
 
         // return any PHP function or any of the defined valid PHP constructs
         $constructs = array('isset', 'empty');
-        if ( function_exists($name) || in_array($name, $constructs) ) {
-            $function = new TwigFunction($name);
-            $this->addFunction($name, $function);
-            return $function;
+        if( strpos($name, '_') == 0 ){
+            $_name = substr($name, 1);
+            if ( function_exists($_name) || in_array($_name, $constructs) ) {
+                $function = new TwigFunction($_name);
+                $this->addFunction($name, $function);
+                return $function;
+            }
         }
 
         // no function found
