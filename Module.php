@@ -19,22 +19,15 @@ use Zend\Module\Manager,
  * ZeTwig Module class
  * @package ZeTwig
  * @author Cosmin Harangus <cosmin@zendexperts.com>
+ * @todo Implement extension points to allow injection of html from other modules
+ * @todo Implement rendering of controller actions from within a module
  */
 class Module implements AutoloaderProvider
 {
     /**
-     * @var \ZeTwig\View\Renderer
+     * @var \Zend\Mvc\AppContext
      */
-    protected $view;
-    /**
-     * @var \ZeTwig\View\Listener
-     */
-    protected $viewListener;
-
-    /**
-     * @var null | array
-     */
-    private $_options = null;
+    protected static $application;
 
     /**
      * Module initialization
@@ -43,20 +36,36 @@ class Module implements AutoloaderProvider
     public function init(Manager $moduleManager)
     {
         $events = StaticEventManager::getInstance();
-        $events->attach('bootstrap', 'bootstrap', array($this, 'initializeView'), 100);
-        $moduleManager->events()->attach('loadModules.post', array($this, 'postInit'));
+        $events->attach('bootstrap', 'bootstrap', array($this, 'bootstrap'), 100);
     }
 
-    /**
-     * Load full configuration options
-     * @param \Zend\Module\ModuleEvent $e
-     * @return void
-     */
-    public function postInit(ModuleEvent $e)
+    public function bootstrap($e)
     {
-        $config = $e->getConfigListener()->getMergedConfig();
-        $config = $config->toArray();
-        $this->_options = $config['ze_twig'];
+        // Register a "render" event, at high priority (so it executes prior
+        // to the view attempting to render)
+        $app = $e->getParam('application');
+        static::$application = $app;
+        $app->events()->attach('render', array($this, 'registerTwigStrategy'), 100);
+    }
+
+    public function registerTwigStrategy($e)
+    {
+        $app          = $e->getTarget();
+        $locator      = $app->getLocator();
+        $view         = $locator->get('Zend\View\View');
+        $twigStrategy = $locator->get('ZeTwig\View\Strategy\TwigRendererStrategy');
+
+        $renderer = $twigStrategy->getRenderer();
+
+        $basePath = $app->getRequest()->getBasePath();
+        $renderer->plugin('basePath')->setBasePath($basePath);
+        $renderer->plugin('url')->setRouter($e->getRouter());
+        $renderer->plugin('headTitle')->setSeparator(' - ')
+                                  ->setAutoEscape(false)
+                                  ->append('ProjectQuery');
+
+        // Attach strategy, which is a listener aggregate, at high priority
+        $view->events()->attach($twigStrategy, 100);
     }
 
     /**
@@ -66,9 +75,9 @@ class Module implements AutoloaderProvider
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
-                __DIR__ . '/autoload/classmap.php',
-            ),
+//            'Zend\Loader\ClassMapAutoloader' => array(
+//                __DIR__ . '/autoload/classmap.php',
+//            ),
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
@@ -86,69 +95,19 @@ class Module implements AutoloaderProvider
      */
     public function getConfig()
     {
-        $definitions = include __DIR__ . '/config/module.di.config.php';
+//        $definitions = include __DIR__ . '/config/module.di.config.php';
         $config = include __DIR__ . '/config/module.config.php';
-        $config = array_merge_recursive($definitions, $config);
+//        $config = array_merge_recursive($definitions, $config);
         return $config;
     }
 
     /**
-     * Handle View Initialization
-     * @param $e
+     * @static
+     * @return \Zend\Mvc\AppContext
      */
-    public function initializeView($e)
+    public static function getApplication()
     {
-        $app          = $e->getParam('application');
-        $locator      = $app->getLocator();
-        $config       = $e->getParam('config');
-        $view         = $this->getView($app);
-        $viewListener = $this->getViewListener($view, $config);
-        $app->events()->attachAggregate($viewListener);
-        $events       = StaticEventManager::getInstance();
-        $viewListener->registerStaticListeners($events, $locator);
+        return static::$application;
     }
 
-    /**
-     * Load the view listener
-     * @param $view
-     * @param $config
-     * @return View\Listener
-     */
-    protected function getViewListener($view, $config)
-    {
-        if ($this->viewListener instanceof View\Listener) {
-            return $this->viewListener;
-        }
-
-        $viewListener = new View\Listener($view, $config->layout);
-        $viewListener->setDisplayExceptionsFlag($config->display_exceptions);
-
-        $this->viewListener = $viewListener;
-        return $viewListener;
-    }
-
-    /**
-     * Load the view with configured options
-     * @param $app
-     * @return mixed
-     */
-    protected function getView($app)
-    {
-        if ($this->view) {
-            return $this->view;
-        }
-
-        $di     = $app->getLocator();
-        $view   = $di->get('view');
-        $view->setEnvironmentOptions($this->_options);
-        $basePath = $app->getRequest()->getBasePath();
-        $view->plugin('basePath')->setBasePath($basePath);
-        $view->plugin('url')->setRouter($app->getRouter());
-        $view->plugin('headTitle')->setSeparator(' - ')
-                                  ->setAutoEscape(false)
-                                  ->append('ProjectQuery');
-
-        $this->view = $view;
-        return $view;
-    }
 }

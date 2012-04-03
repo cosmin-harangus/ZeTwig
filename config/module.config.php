@@ -1,27 +1,72 @@
 <?php
 return array(
-    'ze_twig' => array(
-        'extension' => '.twig',
-        'alias'=>array(
-            '@tpl.root'             => 'layouts/main',
-            '@tpl.root_one_column'  => 'layouts/main_one_column',
-            '@tpl.root_two_columns' => 'layouts/main_two_columns',
+    'di' => array(
+        'definition' => array(
+            'class' => array(
+                'ZeTwig\View\Resolver' => array(
+                    'attach' => array(
+                        'resolver' => array('type' => 'Zend\View\Resolver', 'required' => true)
+                    )
+                )
+            )
         ),
-    ),
-    'display_exceptions'    => true,
-    'di'                    => array(
         'instance' => array(
-            'alias' => array(
-                'view'  => 'ZeTwig\View\Renderer',
+            // Inject the plugin broker for controller plugins into
+            // the action controller for use by all controllers that
+            // extend it.
+            'Zend\Mvc\Controller\ActionController' => array(
+                'parameters' => array(
+                    'broker'       => 'Zend\Mvc\Controller\PluginBroker',
+                ),
+            ),
+            'Zend\Mvc\Controller\PluginBroker' => array(
+                'parameters' => array(
+                    'loader' => 'Zend\Mvc\Controller\PluginLoader',
+                ),
+            ),
+            'Zend\View\Resolver\TemplateMapResolver' => array(
+                'parameters' => array(
+                    'map'  => array(
+                    ),
+                ),
+            ),
+            'Zend\View\Resolver\TemplatePathStack' => array(
+                'parameters' => array(
+                    'defaultSuffix'=>'twig',
+                ),
+            ),
+            'ZeTwig\View\Resolver'=>array(
+                'injections' => array(
+                    'Zend\View\Resolver\TemplateMapResolver',
+                    'Zend\View\Resolver\TemplatePathStack',
+                ),
             ),
             'ZeTwig\View\Renderer' => array(
                 'parameters' => array(
                     'environment'=>'ZeTwig\View\Environment',
+                    'resolver' => 'ZeTwig\View\Resolver',
+                ),
+            ),
+            'Zend\Mvc\View\DefaultRenderingStrategy' => array(
+                'parameters' => array(
+                    'layoutTemplate' => 'layouts/main',
+                ),
+            ),
+            'Zend\Mvc\View\ExceptionStrategy' => array(
+                'parameters' => array(
+                    'displayExceptions' => true,
+                    'exceptionTemplate' => 'error/index',
+                ),
+            ),
+            'Zend\Mvc\View\RouteNotFoundStrategy' => array(
+                'parameters' => array(
+                    'displayNotFoundReason' => true,
+                    'displayExceptions'     => true,
+                    'notFoundTemplate'      => 'error/404',
                 ),
             ),
             'ZeTwig\View\Environment'=>array(
                 'parameters' => array(
-                    'loader' => 'ZeTwig\View\Loader',
                     'broker' => 'Zend\View\HelperBroker',
                     'options' => array(
                         'cache' => BASE_PATH . '/data/cache/twig',
@@ -29,11 +74,6 @@ return array(
                         'debug' => true
                     ),
                 ),
-            ),
-            'ZeTwig\View\Loader'=>array(
-                'parameters' => array(
-                    'paths'=> array()
-                )
             ),
         ),
     ),

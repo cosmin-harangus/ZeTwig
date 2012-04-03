@@ -9,33 +9,21 @@
  */
 namespace ZeTwig\View;
 
-use Zend\View\TemplatePathStack,
+use Zend\View\Resolver\AggregateResolver,
     Twig_LoaderInterface as LoaderInterface;
 
 /**
- * ZeTwig Loader class
+ * ZeTwig Resolver class
  * @package ZeTwig
+ * @version 0.2
  * @author Cosmin Harangus <cosmin@zendexperts.com>
  */
-class Loader extends TemplatePathStack implements LoaderInterface
+class Resolver extends AggregateResolver implements LoaderInterface
 {
     /**
      * @var null|array
      */
     protected $_config = null;
-
-    /**
-     * Gets the source code of a template, given its name.
-     *
-     * @param  string $name The name of the template to load
-     *
-     * @return string The template source code
-     */
-    public function getSource($name)
-    {
-        $path = $this->getScriptPath($name);
-        return file_get_contents($path);
-    }
 
     /**
      * Setter for config
@@ -49,24 +37,29 @@ class Loader extends TemplatePathStack implements LoaderInterface
     }
 
     /**
-     * Getter for config
-     * @return null | array
+     * Gets the source code of a template, given its name.
+     *
+     * @param  string $name The name of the template to load
+     * @return string The template source code
      */
-    public function getConfig()
+    public function getSource($name)
     {
-        return $this->_config;
+        $path = $this->resolve($name);
+        if (!$path){
+            throw new Exception\TemplateException(sprintf('Template "%s" not found.', $name));
+        }
+        return file_get_contents($path);
     }
 
     /**
      * Gets the cache key to use for the cache for a given template name.
      *
      * @param  string $name The name of the template to load
-     *
      * @return string The cache key
      */
     public function getCacheKey($name)
     {
-        $path = $this->getScriptPath($name);
+        $path = $this->resolve($name);
         return $path;
     }
 
@@ -79,25 +72,11 @@ class Loader extends TemplatePathStack implements LoaderInterface
      */
     public function isFresh($name, $time)
     {
-        $path = $this->getScriptPath($name);
+        $path = $this->resolve($name);
+        if (!$path){
+            return false;
+        }
         return filemtime($path) < $time;
     }
-
-    /**
-     * @param $name
-     * @return string
-     */
-    public function getScriptPath($name)
-    {
-
-        if (isset($this->_config) && isset($this->_config['alias']) && !empty($this->_config['alias'])){
-            if (array_key_exists($name, $this->_config['alias'])){
-                $name = $this->_config['alias'][$name];
-            }
-        }
-        $name .= $this->_config['extension'];
-        return parent::getScriptPath($name);
-    }
-
 
 }

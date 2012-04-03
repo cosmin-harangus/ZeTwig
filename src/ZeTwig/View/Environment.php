@@ -11,21 +11,27 @@ namespace ZeTwig\View;
 
 use Zend\View\HelperBroker,
     Zend\Loader\Pluggable,
+    Zend\Loader\LocatorAware,
+    Zend\Di\Locator,
     Twig_Environment,
     Twig_Function_Function as TwigFunction,
 
     ZeTwig\View\HelperFunction,
-    ZeTwig\View\Loader;
+    ZeTwig\View\Resolver;
 
 /**
  * ZeTwig Environment class
  * @package ZeTwig
  * @author Cosmin Harangus <cosmin@zendexperts.com>
  */
-class Environment extends Twig_Environment implements Pluggable
+class Environment extends Twig_Environment implements Pluggable, LocatorAware
 {
+    /**
+     * Zend View access broker for all the provided Zend Framework helpers
+     * @var null
+     */
     protected $_broker = null;
-//    protected $_options = null;
+    protected $_locator = null;
 
     /**
      * Constructor.
@@ -57,27 +63,41 @@ class Environment extends Twig_Environment implements Pluggable
      *                   (default to -1 which means that all optimizations are enabled;
      *                   set it to 0 to disable)
      *
-     * @param Loader                    $loader  A Twig_LoaderInterface instance
+     * @param Resolver                  $loader  A Twig_LoaderInterface instance
      * @param \Zend\View\HelperBroker   $broker  A Zend View Helper Broker instance
      * @param array                     $options An array of options
      */
-    public function __construct(Loader $loader = null, HelperBroker $broker = null, $options = array())
+    public function __construct(Resolver $loader = null, HelperBroker $broker = null, $options = array())
     {
         parent::__construct($loader, $options);
         $this->setBroker( $broker );
     }
 
-    public function setEnvironmentOptions($environment_options)
+    public function setLocator(Locator $locator)
     {
-//        $this->_options = $environment_options;
-        $this->getLoader()->setConfig($environment_options);
+        $this->_locator = $locator;
         return $this;
     }
 
-//    public function render($name, array $context = array())
-//    {
-//        return parent::render($name.$this->_options['extension'], $context);
-//    }
+    /**
+     * @return \Zend\Di\Di
+     */
+    public function getLocator()
+    {
+        return $this->_locator;
+    }
+
+
+    /**
+     * The the configured options into the loader for proper loading of files based on the aliases array
+     * @param $environment_options
+     * @return Environment
+     */
+    public function setEnvironmentOptions($environment_options)
+    {
+        $this->getLoader()->setConfig($environment_options);
+        return $this;
+    }
 
     /**
      * Get a function by name.
@@ -101,7 +121,7 @@ class Environment extends Twig_Environment implements Pluggable
         try{
             $helper = $this->plugin($name,array());
             if (null !== $helper){
-                $function = new HelperFunction($name);
+                $function = new HelperFunction($name, array('is_safe' => array('html')));
                 $this->addFunction($name, $function);
                 return $function;
             }
@@ -111,14 +131,15 @@ class Environment extends Twig_Environment implements Pluggable
 
         // return any PHP function or any of the defined valid PHP constructs
         $constructs = array('isset', 'empty');
-        if( strpos($name, '_') == 0 ){
-            $_name = substr($name, 1);
+//        if( strpos($name, '_') == 0 ){
+//            $_name = substr($name, 1);
+            $_name = $name;
             if ( function_exists($_name) || in_array($_name, $constructs) ) {
                 $function = new TwigFunction($_name);
                 $this->addFunction($name, $function);
                 return $function;
             }
-        }
+//        }
 
         // no function found
         return false;

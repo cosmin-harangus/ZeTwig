@@ -1,29 +1,12 @@
-<?php return array(
+<?php
+return array(
     'di' => array(
         'definition' => array(
             'class' => array(
-                'ZeTwig\\View\\HelperFunction' => array(
-                    '__construct' => array(
-                        'name' => array(
-                            'type' => null,
-                            'required' => true,
-                        ),
-                        'options' => array(
-                            'type' => null,
-                            'required' => false,
-                        ),
-                    ),
-                    'setArguments' => array(
-                        'arguments' => array(
-                            'type' => null,
-                            'required' => true,
-                        ),
-                    ),
-                ),
                 'ZeTwig\\View\\Environment' => array(
                     '__construct' => array(
                         'loader' => array(
-                            'type' => 'ZeTwig\\View\\Loader',
+                            'type' => 'ZeTwig\\View\\Resolver',
                             'required' => false,
                         ),
                         'broker' => array(
@@ -33,6 +16,12 @@
                         'options' => array(
                             'type' => null,
                             'required' => false,
+                        ),
+                    ),
+                    'setLocator' => array(
+                        'locator' => array(
+                            'type' => 'Zend\\Di\\Locator',
+                            'required' => true,
                         ),
                     ),
                     'setEnvironmentOptions' => array(
@@ -96,19 +85,147 @@
                         ),
                     ),
                 ),
-                'ZeTwig\\View\\Listener' => array(
+                'ZeTwig\\View\\Exception\\TemplateException' => array(
                     '__construct' => array(
-                        'renderer' => array(
-                            'type' => 'Zend\\View\\Renderer',
-                            'required' => true,
+                        'message' => array(
+                            'type' => null,
+                            'required' => false,
                         ),
-                        'layout' => array(
+                        'code' => array(
+                            'type' => null,
+                            'required' => false,
+                        ),
+                        'previous' => array(
                             'type' => null,
                             'required' => false,
                         ),
                     ),
-                    'setDisplayExceptionsFlag' => array(
-                        'flag' => array(
+                ),
+                'ZeTwig\\View\\Extension\\Render\\RenderNode' => array(
+                    '__construct' => array(
+                        'expr' => array(
+                            'type' => 'Twig_Node_Expression',
+                            'required' => true,
+                        ),
+                        'attributes' => array(
+                            'type' => 'Twig_Node_Expression',
+                            'required' => true,
+                        ),
+                        'options' => array(
+                            'type' => 'Twig_Node_Expression',
+                            'required' => true,
+                        ),
+                        'lineno' => array(
+                            'type' => null,
+                            'required' => true,
+                        ),
+                        'tag' => array(
+                            'type' => null,
+                            'required' => false,
+                        ),
+                    ),
+                    'setAttribute' => array(
+                        'name' => array(
+                            'type' => null,
+                            'required' => true,
+                        ),
+                        'value' => array(
+                            'type' => null,
+                            'required' => true,
+                        ),
+                    ),
+                    'setNode' => array(
+                        'name' => array(
+                            'type' => null,
+                            'required' => true,
+                        ),
+                        'node' => array(
+                            'type' => null,
+                            'required' => false,
+                        ),
+                    ),
+                ),
+                'ZeTwig\\View\\Extension\\Render\\TokenParser' => array(
+                    'setParser' => array(
+                        'parser' => array(
+                            'type' => 'Twig_Parser',
+                            'required' => true,
+                        ),
+                    ),
+                ),
+                'ZeTwig\\View\\Extension\\Trigger\\RenderNode' => array(
+                    '__construct' => array(
+                        'event' => array(
+                            'type' => 'Twig_Node_Expression',
+                            'required' => true,
+                        ),
+                        'target' => array(
+                            'type' => 'Twig_Node_Expression',
+                            'required' => true,
+                        ),
+                        'attributes' => array(
+                            'type' => 'Twig_Node_Expression',
+                            'required' => true,
+                        ),
+                        'lineno' => array(
+                            'type' => null,
+                            'required' => true,
+                        ),
+                        'tag' => array(
+                            'type' => null,
+                            'required' => false,
+                        ),
+                    ),
+                    'setAttribute' => array(
+                        'name' => array(
+                            'type' => null,
+                            'required' => true,
+                        ),
+                        'value' => array(
+                            'type' => null,
+                            'required' => true,
+                        ),
+                    ),
+                    'setNode' => array(
+                        'name' => array(
+                            'type' => null,
+                            'required' => true,
+                        ),
+                        'node' => array(
+                            'type' => null,
+                            'required' => false,
+                        ),
+                    ),
+                ),
+                'ZeTwig\\View\\Extension\\Trigger\\TokenParser' => array(
+                    'setParser' => array(
+                        'parser' => array(
+                            'type' => 'Twig_Parser',
+                            'required' => true,
+                        ),
+                    ),
+                ),
+                'ZeTwig\\View\\Extension' => array(
+                    'setEventManager' => array(
+                        'events' => array(
+                            'type' => 'Zend\\EventManager\\EventCollection',
+                            'required' => true,
+                        ),
+                    ),
+                ),
+                'ZeTwig\\View\\HelperFunction' => array(
+                    '__construct' => array(
+                        'name' => array(
+                            'type' => null,
+                            'required' => true,
+                        ),
+                        'options' => array(
+                            'type' => null,
+                            'required' => false,
+                        ),
+                    ),
+                    'setArguments' => array(
+                        'arguments' => array(
                             'type' => null,
                             'required' => true,
                         ),
@@ -123,6 +240,12 @@
                         'config' => array(
                             'type' => null,
                             'required' => false,
+                        ),
+                    ),
+                    'setResolver' => array(
+                        'resolver' => array(
+                            'type' => 'Zend\\View\\Resolver',
+                            'required' => true,
                         ),
                     ),
                     'setEnvironmentOptions' => array(
@@ -143,41 +266,31 @@
                             'required' => true,
                         ),
                     ),
-                ),
-                'ZeTwig\\View\\Loader' => array(
-                    '__construct' => array(
-                        'options' => array(
+                    'setCanRenderTrees' => array(
+                        'renderTrees' => array(
                             'type' => null,
-                            'required' => false,
+                            'required' => true,
                         ),
                     ),
+                ),
+                'ZeTwig\\View\\Resolver' => array(
                     'setConfig' => array(
                         'config' => array(
                             'type' => null,
                             'required' => true,
                         ),
                     ),
-                    'setOptions' => array(
-                        'options' => array(
-                            'type' => null,
-                            'required' => true,
-                        ),
-                    ),
-                    'setPaths' => array(
-                        'paths' => array(
-                            'type' => null,
-                            'required' => true,
-                        ),
-                    ),
-                    'setLfiProtection' => array(
-                        'flag' => array(
-                            'type' => null,
-                            'required' => true,
-                        ),
-                    ),
-                    'setUseStreamWrapper' => array(
-                        'flag' => array(
-                            'type' => null,
+					'attach' => array(
+                        'resolver' => array(
+							'type' => 'Zend\View\Resolver', 
+							'required' => true
+						)
+                    )
+                ),
+                'ZeTwig\\View\\Strategy\\TwigRendererStrategy' => array(
+                    '__construct' => array(
+                        'renderer' => array(
+                            'type' => 'ZeTwig\\View\\Renderer',
                             'required' => true,
                         ),
                     ),
