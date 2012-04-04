@@ -26,12 +26,13 @@ templates to have their own structure).
 
 This latest version also contains two new constructs:
 
+
 1. A tag for rendering a controller action, which follows the Symfony naming conventions 
 	or the controller alias and can be used as :
 	
 	{% render "Core:Index:index" with {'param1':1} %}
 
-2. A tag for triggering an event on the renderer that is similar to the above syntax:
+1. A tag for triggering an event on the renderer that is similar to the above syntax:
 	
 	{% trigger "myRendererEvent" on myObject with {'param1':1} %}
 	
