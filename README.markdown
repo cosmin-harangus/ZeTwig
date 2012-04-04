@@ -25,8 +25,10 @@ other modules to change them as well (this allows your code to be extensible and
 templates to have their own structure).
 
 This latest version also contains two new constructs:
+
 1. A tag for rendering a controller action, which follows the Symfony naming conventions 
 	or the controller alias and can be used as :
+	
 	{% render "Core:Index:index" with {'param1':1} %}
 
 2. A tag for triggering an event on the renderer that is similar to the above syntax:
@@ -35,7 +37,6 @@ This latest version also contains two new constructs:
 	
 	Both the target object and parameters are optional. The result of each listener is 
 converted to string and rendered intead of the definition.
-
 
 Also a new functionality allows the use of aliases within your template code or when
 rendering a template.
