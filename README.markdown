@@ -26,7 +26,6 @@ templates to have their own structure).
 
 This latest version also contains two new constructs:
 
-
 1. A tag for rendering a controller action, which follows the Symfony naming conventions 
 	or the controller alias and can be used as :
 	
