@@ -49,7 +49,7 @@ return array(
             ),
             'Zend\Mvc\View\DefaultRenderingStrategy' => array(
                 'parameters' => array(
-                    'layoutTemplate' => 'layouts/main',
+                    'layoutTemplate' => 'layouts/layout',
                 ),
             ),
             'Zend\Mvc\View\ExceptionStrategy' => array(

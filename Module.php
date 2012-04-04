@@ -61,8 +61,7 @@ class Module implements AutoloaderProvider
         $renderer->plugin('basePath')->setBasePath($basePath);
         $renderer->plugin('url')->setRouter($e->getRouter());
         $renderer->plugin('headTitle')->setSeparator(' - ')
-                                  ->setAutoEscape(false)
-                                  ->append('ProjectQuery');
+                                  ->setAutoEscape(false);
 
         // Attach strategy, which is a listener aggregate, at high priority
         $view->events()->attach($twigStrategy, 100);
