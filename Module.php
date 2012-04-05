@@ -19,8 +19,6 @@ use Zend\Module\Manager,
  * ZeTwig Module class
  * @package ZeTwig
  * @author Cosmin Harangus <cosmin@zendexperts.com>
- * @todo Implement extension points to allow injection of html from other modules
- * @todo Implement rendering of controller actions from within a module
  */
 class Module implements AutoloaderProvider
 {
@@ -60,8 +58,9 @@ class Module implements AutoloaderProvider
         $basePath = $app->getRequest()->getBasePath();
         $renderer->plugin('basePath')->setBasePath($basePath);
         $renderer->plugin('url')->setRouter($e->getRouter());
-        $renderer->plugin('headTitle')->setSeparator(' - ')
-                                  ->setAutoEscape(false);
+        $renderer->plugin('headTitle')
+            ->setSeparator(' - ')
+            ->setAutoEscape(false);
 
         // Attach strategy, which is a listener aggregate, at high priority
         $view->events()->attach($twigStrategy, 100);
@@ -74,9 +73,9 @@ class Module implements AutoloaderProvider
     public function getAutoloaderConfig()
     {
         return array(
-//            'Zend\Loader\ClassMapAutoloader' => array(
-//                __DIR__ . '/autoload/classmap.php',
-//            ),
+            'Zend\Loader\ClassMapAutoloader' => array(
+                __DIR__ . '/autoload/classmap.php',
+            ),
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
@@ -94,9 +93,9 @@ class Module implements AutoloaderProvider
      */
     public function getConfig()
     {
-//        $definitions = include __DIR__ . '/config/module.di.config.php';
+        $definitions = include __DIR__ . '/config/module.di.config.php';
         $config = include __DIR__ . '/config/module.config.php';
-//        $config = array_merge_recursive($definitions, $config);
+        $config = array_merge_recursive($definitions, $config);
         return $config;
     }
 

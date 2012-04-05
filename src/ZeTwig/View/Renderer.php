@@ -16,6 +16,8 @@ use Zend\View\Renderer as ViewRenderer,
     Zend\View\Model,
     Zend\View\Renderer\TreeRendererInterface,
 
+    Ze\Application\Context,
+
     ZeTwig\View\Environment,
     ZeTwig\View\Resolver,
     ZeTwig\View\Exception;
@@ -46,7 +48,6 @@ class Renderer implements ViewRenderer, Pluggable, TreeRendererInterface
     public function __construct(Environment $environment, $config = array())
     {
         $this->__environment = $environment;
-        $this->__environment->addExtension(new Extension());
     }
 
     /**

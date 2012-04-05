@@ -84,6 +84,9 @@ return array(
                             'required' => true,
                         ),
                     ),
+                    'addExtension' => array(
+                        'extension' => array('type' => 'Twig_ExtensionInterface', 'required' => true)
+                    )
                 ),
                 'ZeTwig\\View\\Exception\\TemplateException' => array(
                     '__construct' => array(
@@ -280,11 +283,8 @@ return array(
                             'required' => true,
                         ),
                     ),
-					'attach' => array(
-                        'resolver' => array(
-							'type' => 'Zend\View\Resolver', 
-							'required' => true
-						)
+                    'attach' => array(
+                        'resolver' => array('type' => 'Zend\View\Resolver', 'required' => true)
                     )
                 ),
                 'ZeTwig\\View\\Strategy\\TwigRendererStrategy' => array(

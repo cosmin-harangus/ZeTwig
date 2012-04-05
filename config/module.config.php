@@ -1,15 +1,6 @@
 <?php
 return array(
     'di' => array(
-        'definition' => array(
-            'class' => array(
-                'ZeTwig\View\Resolver' => array(
-                    'attach' => array(
-                        'resolver' => array('type' => 'Zend\View\Resolver', 'required' => true)
-                    )
-                )
-            )
-        ),
         'instance' => array(
             // Inject the plugin broker for controller plugins into
             // the action controller for use by all controllers that
@@ -66,6 +57,9 @@ return array(
                 ),
             ),
             'ZeTwig\View\Environment'=>array(
+                'injections' => array(
+                    'ZeTwig\View\Extension'
+                ),
                 'parameters' => array(
                     'broker' => 'Zend\View\HelperBroker',
                     'options' => array(
