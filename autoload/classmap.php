@@ -4,6 +4,7 @@
  */
 $prefix = dirname(__DIR__) . "";
 return array(
+    'ZeTwig\Module'                             => $prefix . '/Module.php',
     'ZeTwig\View\Environment'                   => $prefix . '/src/ZeTwig/View\Environment.php',
     'ZeTwig\View\Extension'                     => $prefix . '/src/ZeTwig/View\Extension.php',
     'ZeTwig\View\HelperFunction'                => $prefix . '/src/ZeTwig/View\HelperFunction.php',
