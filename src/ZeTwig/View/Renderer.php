@@ -116,7 +116,6 @@ class Renderer implements ViewRenderer, Pluggable, TreeRendererInterface
         return $this->getFilterChain()->filter($output);
     }
 
-
     #GETTERS AND SETTERS
     /**
      * Return the template engine object, if any
@@ -187,8 +186,6 @@ class Renderer implements ViewRenderer, Pluggable, TreeRendererInterface
         }
         return $this->__filterChain;
     }
-
-
 
     /**
      * Set flag indicating whether or not we should render trees of view models

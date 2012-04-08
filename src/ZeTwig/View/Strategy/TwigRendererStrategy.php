@@ -66,7 +66,6 @@ class TwigRendererStrategy implements ListenerAggregate
      */
     public function selectRenderer($e = null)
     {
-
         return $this->renderer;
     }
 
@@ -87,16 +86,3 @@ class TwigRendererStrategy implements ListenerAggregate
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
