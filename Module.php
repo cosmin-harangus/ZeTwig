@@ -54,7 +54,6 @@ class Module implements AutoloaderProvider
         $twigStrategy = $locator->get('ZeTwig\View\Strategy\TwigRendererStrategy');
 
         $renderer = $twigStrategy->getRenderer();
-
         $basePath = $app->getRequest()->getBasePath();
         $renderer->plugin('basePath')->setBasePath($basePath);
         $renderer->plugin('url')->setRouter($e->getRouter());

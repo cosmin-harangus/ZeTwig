@@ -87,18 +87,6 @@ class Environment extends Twig_Environment implements Pluggable, LocatorAware
         return $this->_locator;
     }
 
-
-    /**
-     * The the configured options into the loader for proper loading of files based on the aliases array
-     * @param $environment_options
-     * @return Environment
-     */
-    public function setEnvironmentOptions($environment_options)
-    {
-        $this->getLoader()->setConfig($environment_options);
-        return $this;
-    }
-
     /**
      * Get a function by name.
      *
@@ -153,7 +141,7 @@ class Environment extends Twig_Environment implements Pluggable, LocatorAware
     public function getBroker()
     {
         if (null === $this->_broker){
-            $this->_broker = new HelperBroker();
+            $this->_broker = $this->getLocator()->get('Zend\View\HelperBroker');
         }
         return $this->_broker;
     }

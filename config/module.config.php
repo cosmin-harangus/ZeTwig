@@ -5,22 +5,22 @@ return array(
             // Inject the plugin broker for controller plugins into
             // the action controller for use by all controllers that
             // extend it.
-            'Zend\Mvc\Controller\ActionController' => array(
-                'parameters' => array(
-                    'broker'       => 'Zend\Mvc\Controller\PluginBroker',
-                ),
-            ),
-            'Zend\Mvc\Controller\PluginBroker' => array(
-                'parameters' => array(
-                    'loader' => 'Zend\Mvc\Controller\PluginLoader',
-                ),
-            ),
-            'Zend\View\Resolver\TemplateMapResolver' => array(
-                'parameters' => array(
-                    'map'  => array(
-                    ),
-                ),
-            ),
+//            'Zend\Mvc\Controller\ActionController' => array(
+//                'parameters' => array(
+//                    'broker'       => 'Zend\Mvc\Controller\PluginBroker',
+//                ),
+//            ),
+//            'Zend\Mvc\Controller\PluginBroker' => array(
+//                'parameters' => array(
+//                    'loader' => 'Zend\Mvc\Controller\PluginLoader',
+//                ),
+//            ),
+//            'Zend\View\Resolver\TemplateMapResolver' => array(
+//                'parameters' => array(
+//                    'map'  => array(
+//                    ),
+//                ),
+//            ),
             'Zend\View\Resolver\TemplatePathStack' => array(
                 'parameters' => array(
                     'defaultSuffix'=>'twig',
@@ -34,8 +34,8 @@ return array(
             ),
             'ZeTwig\View\Renderer' => array(
                 'parameters' => array(
+                    'broker' => 'Zend\View\HelperBroker',
                     'environment'=>'ZeTwig\View\Environment',
-                    'resolver' => 'ZeTwig\View\Resolver',
                 ),
             ),
             'Zend\Mvc\View\DefaultRenderingStrategy' => array(
@@ -61,7 +61,7 @@ return array(
                     'ZeTwig\View\Extension'
                 ),
                 'parameters' => array(
-                    'broker' => 'Zend\View\HelperBroker',
+                    'loader' => 'ZeTwig\View\Resolver',
                     'options' => array(
                         'cache' => BASE_PATH . '/data/cache/twig',
                         'auto_reload' => true,

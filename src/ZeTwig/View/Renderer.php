@@ -61,11 +61,6 @@ class Renderer implements ViewRenderer, Pluggable, TreeRendererInterface
         return $this;
     }
 
-    public function setEnvironmentOptions($options)
-    {
-        $this->__environment->setEnvironmentOptions($options);
-    }
-
     /**
      * Processes a view template and returns the output.
      *
@@ -134,7 +129,7 @@ class Renderer implements ViewRenderer, Pluggable, TreeRendererInterface
      */
     public function getBroker()
     {
-        $this->__environment->getBroker();
+        return $this->__environment->getBroker();
     }
 
     /**
@@ -145,8 +140,8 @@ class Renderer implements ViewRenderer, Pluggable, TreeRendererInterface
      */
     public function setBroker($broker)
     {
+        $broker->setView($this);
         $this->__environment->setBroker($broker);
-        $this->getBroker()->setView($this);
         return $this;
     }
 

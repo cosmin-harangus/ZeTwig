@@ -21,22 +21,6 @@ use Zend\View\Resolver\AggregateResolver,
 class Resolver extends AggregateResolver implements LoaderInterface
 {
     /**
-     * @var null|array
-     */
-    protected $_config = null;
-
-    /**
-     * Setter for config
-     * @param array $config
-     * @return Loader
-     */
-    public function setConfig($config)
-    {
-        $this->_config = $config;
-        return $this;
-    }
-
-    /**
      * Gets the source code of a template, given its name.
      *
      * @param  string $name The name of the template to load
