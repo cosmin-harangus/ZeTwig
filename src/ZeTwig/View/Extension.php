@@ -1,8 +1,7 @@
 <?php
 namespace ZeTwig\View;
 
-use
-    Zend\Http\Response,
+use Zend\Http\Response,
     Zend\Mvc\Controller\ActionController,
     Zend\View\Model\ViewModel,
     Zend\Loader\LocatorAware,

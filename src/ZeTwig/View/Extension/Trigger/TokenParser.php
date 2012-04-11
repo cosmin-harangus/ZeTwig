@@ -3,7 +3,7 @@ namespace ZeTwig\View\Extension\Trigger;
 use Twig_TokenParser,
     Twig_Token,
     Twig_Node_Expression_Array,
-    Twig_Node_Expression_AssignName;
+    Twig_Node_Expression_Constant;
 
 class TokenParser extends Twig_TokenParser
 {
@@ -23,7 +23,7 @@ class TokenParser extends Twig_TokenParser
             $this->parser->getStream()->next();
             $target = $this->parser->getExpressionParser()->parseExpression();
         } else {
-            $target = new Twig_Node_Expression_AssignName(null, $token->getLine());
+            $target = new Twig_Node_Expression_Constant(null, $token->getLine());
         }
 
         // attributes

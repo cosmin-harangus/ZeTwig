@@ -2,6 +2,9 @@
 return array(
     'di' => array(
         'instance' => array(
+            'alias'=>array(
+                'view'=>'ZeTwig\View\Renderer'
+            ),
             // Inject the plugin broker for controller plugins into
             // the action controller for use by all controllers that
             // extend it.
