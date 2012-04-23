@@ -61,7 +61,7 @@ return array(
             ),
             'ZeTwig\View\Environment'=>array(
                 'injections' => array(
-                    'ZeTwig\View\Extension'
+                    'ZeTwig'=>'ZeTwig\View\Extension'
                 ),
                 'parameters' => array(
                     'loader' => 'ZeTwig\View\Resolver',
