@@ -61,6 +61,11 @@ class Renderer implements ViewRenderer, Pluggable, TreeRendererInterface
         return $this;
     }
 
+    public function partial($nameOrModel, $values = null)
+    {
+        return $this->render($nameOrModel, $values);
+    }
+
     /**
      * Processes a view template and returns the output.
      *
