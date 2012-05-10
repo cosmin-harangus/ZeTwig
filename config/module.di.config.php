@@ -211,8 +211,8 @@ return array(
                 'ZeTwig\\View\\Extension' => array(
                     'setEventManager' => array(
                         'events' => array(
-                            'type' => 'Zend\\EventManager\\EventCollection',
-                            'required' => true,
+                            'type' => false,
+                            'required' => false,
                         ),
                     ),
                 ),
@@ -284,7 +284,7 @@ return array(
                         ),
                     ),
                     'attach' => array(
-                        'resolver' => array('type' => 'Zend\View\Resolver', 'required' => true)
+                        'resolver' => array('type' => 'Zend\View\Resolver\ResolverInterface', 'required' => true)
                     )
                 ),
                 'ZeTwig\\View\\Strategy\\TwigRendererStrategy' => array(

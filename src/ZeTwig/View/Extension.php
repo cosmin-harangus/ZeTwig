@@ -3,11 +3,11 @@ namespace ZeTwig\View;
 
 use Zend\Http\Response,
     Zend\Mvc\Controller\ActionController,
-    Zend\View\Model\ViewModel,
+    Zend\View\Model\ModelInterface,
     Zend\Loader\LocatorAware,
-    Zend\Mvc\InjectApplicationEvent,
+    Zend\Mvc\InjectApplicationEventInterface,
     Zend\EventManager\EventManager,
-    Zend\EventManager\EventCollection,
+    Zend\EventManager\EventManagerInterface,
     Zend\EventManager\Event,
     Twig_Extension,
 
@@ -48,10 +48,10 @@ class Extension extends Twig_Extension
 
     /**
      * Set the event manager instance used by this context
-     * @param \Zend\EventManager\EventCollection $events
+     * @param \Zend\EventManager\EventManagerInterface $events
      * @return Extension
      */
-    public function setEventManager(EventCollection $events)
+    public function setEventManager(EventManagerInterface $events)
     {
         $this->events = $events;
         return $this;
@@ -60,11 +60,11 @@ class Extension extends Twig_Extension
     /**
      * Retrieve the event manager
      * Lazy-loads an EventManager instance if none registered.
-     * @return EventCollection
+     * @return EventManagerInterface
      */
     public function events()
     {
-        if (!$this->events instanceof EventCollection) {
+        if (!$this->events instanceof EventManagerInterface) {
             $this->setEventManager(new EventManager(array(
                 __CLASS__,
                 get_called_class(),
@@ -142,7 +142,7 @@ class Extension extends Twig_Extension
         $event->setRouteMatch($routeMatch);
 
         //inject the new event into the controller
-        if ($controller instanceof InjectApplicationEvent) {
+        if ($controller instanceof InjectApplicationEventInterface) {
             $controller->setEvent($event);
         }
 
@@ -160,7 +160,7 @@ class Extension extends Twig_Extension
         }
 
         //if the response is an instance of ViewModel then render that one
-        if ($response instanceof ViewModel){
+        if ($response instanceof ModelInterface){
             $viewModel = $response;
         }elseif (is_array($response) || $response instanceof \ArrayAccess || $response instanceof \Traversable) {
             $viewModel = new ViewModel($response);

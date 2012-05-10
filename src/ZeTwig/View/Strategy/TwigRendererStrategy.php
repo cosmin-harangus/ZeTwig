@@ -1,14 +1,14 @@
 <?php
 namespace ZeTwig\View\Strategy;
 
-use Zend\EventManager\EventCollection,
-    Zend\EventManager\ListenerAggregate,
+use Zend\EventManager\EventManagerInterface,
+    Zend\EventManager\ListenerAggregateInterface,
     ZeTwig\View\Renderer as TwigRenderer;
 
 /**
  *
  */
-class TwigRendererStrategy implements ListenerAggregate
+class TwigRendererStrategy implements ListenerAggregateInterface
 {
     /**
      * @var TwigRenderer
@@ -33,10 +33,10 @@ class TwigRendererStrategy implements ListenerAggregate
      * Implementors may add an optional $priority argument; the EventManager
      * implementation will pass this to the aggregate.
      *
-     * @param EventCollection $events
+     * @param \Zend\EventManager\EventManagerInterface $events
      * @param null|int $priority Optional priority "hint" to use when attaching listeners
      */
-    public function attach(EventCollection $events, $priority = null)
+    public function attach(EventManagerInterface $events, $priority = null)
     {
         if (null === $priority) {
             $this->listeners[] = $events->attach('renderer', array($this, 'selectRenderer'));
@@ -49,9 +49,9 @@ class TwigRendererStrategy implements ListenerAggregate
 
     /**
      * Detach all previously attached listeners
-     * @param \Zend\EventManager\EventCollection $events
+     * @param \Zend\EventManager\EventManagerInterface $events
      */
-    public function detach(EventCollection $events)
+    public function detach(EventManagerInterface $events)
     {
         foreach ($this->listeners as $index => $listener) {
             if ($events->detach($listener)) {

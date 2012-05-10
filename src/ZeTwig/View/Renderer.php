@@ -9,11 +9,11 @@
  */
 namespace ZeTwig\View;
 
-use Zend\View\Renderer as ViewRenderer,
+use Zend\View\Renderer\RendererInterface as RendererInterface,
     Zend\Loader\Pluggable,
     Zend\Filter\FilterChain,
-    Zend\View\Resolver as ViewResolver,
-    Zend\View\Model,
+    Zend\View\Resolver\ResolverInterface as ViewResolver,
+    Zend\View\Model\ModelInterface,
     Zend\View\Renderer\TreeRendererInterface,
 
     Ze\Application\Context,
@@ -27,7 +27,7 @@ use Zend\View\Renderer as ViewRenderer,
  * @package ZeTwig
  * @author Cosmin Harangus <cosmin@zendexperts.com>
  */
-class Renderer implements ViewRenderer, Pluggable, TreeRendererInterface
+class Renderer implements RendererInterface, Pluggable, TreeRendererInterface
 {
     /**
      * Twig environment
@@ -75,7 +75,7 @@ class Renderer implements ViewRenderer, Pluggable, TreeRendererInterface
      */
     public function render($nameOrModel, $values = null)
     {
-        if ($nameOrModel instanceof Model) {
+        if ($nameOrModel instanceof ModelInterface) {
             $model       = $nameOrModel;
             $nameOrModel = $model->getTemplate();
             if (empty($nameOrModel)) {

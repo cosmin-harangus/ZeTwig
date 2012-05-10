@@ -13,7 +13,8 @@ namespace ZeTwig;
 use Zend\Module\Manager,
     Zend\EventManager\StaticEventManager,
     Zend\Module\Consumer\AutoloaderProvider,
-    Zend\Module\ModuleEvent;
+    Zend\Module\ModuleEvent,
+    Zend\EventManager\Event;
 
 /**
  * ZeTwig Module class
@@ -37,18 +38,18 @@ class Module implements AutoloaderProvider
         $events->attach('bootstrap', 'bootstrap', array($this, 'bootstrap'), 100);
     }
 
-    public function bootstrap($e)
+    public function bootstrap($event)
     {
         // Register a "render" event, at high priority (so it executes prior
         // to the view attempting to render)
-        $app = $e->getParam('application');
+        $app = $event->getParam('application');
         static::$application = $app;
         $app->events()->attach('render', array($this, 'registerTwigStrategy'), 100);
     }
 
-    public function registerTwigStrategy($e)
+    public function registerTwigStrategy(Event $event)
     {
-        $app          = $e->getTarget();
+        $app          = $event->getTarget();
         $locator      = $app->getLocator();
         $view         = $locator->get('Zend\View\View');
         $twigStrategy = $locator->get('ZeTwig\View\Strategy\TwigRendererStrategy');
@@ -56,7 +57,7 @@ class Module implements AutoloaderProvider
         $renderer = $twigStrategy->getRenderer();
         $basePath = $app->getRequest()->getBasePath();
         $renderer->plugin('basePath')->setBasePath($basePath);
-        $renderer->plugin('url')->setRouter($e->getRouter());
+        $renderer->plugin('url')->setRouter($event->getRouter());
         $renderer->plugin('headTitle')
             ->setSeparator(' - ')
             ->setAutoEscape(false);

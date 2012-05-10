@@ -12,7 +12,7 @@ namespace ZeTwig\View;
 use Zend\View\HelperBroker,
     Zend\Loader\Pluggable,
     Zend\Loader\LocatorAware,
-    Zend\Di\Locator,
+    Zend\Di\LocatorInterface,
     Twig_Environment,
     Twig_Function_Function as TwigFunction,
 
@@ -73,7 +73,7 @@ class Environment extends Twig_Environment implements Pluggable, LocatorAware
         $this->setBroker( $broker );
     }
 
-    public function setLocator(Locator $locator)
+    public function setLocator(LocatorInterface $locator)
     {
         $this->_locator = $locator;
         return $this;
