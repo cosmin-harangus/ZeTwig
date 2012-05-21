@@ -213,4 +213,30 @@ class Renderer implements RendererInterface, Pluggable, TreeRendererInterface
     {
         return $this->__renderTrees;
     }
+
+    /**
+     * Call a view helper with the provided arguments
+     * @param $method
+     * @param $argv
+     * @return mixed
+     */
+    public function __call($method, $argv)
+    {
+        $helper = $this->plugin($method);
+        if (is_callable($helper)) {
+            return call_user_func_array($helper, $argv);
+        }
+        return $helper;
+    }
+
+    /**
+     * Make sure the environment is cloned when the view is cloned
+     *
+     * @return Renderer
+     */
+    public function __clone()
+    {
+        $this->__environment = clone $this->__environment;
+    }
+
 }
