@@ -14,5 +14,10 @@
     "require": {
         "php": ">=5.3.3",
         "twig/twig": "v1.8.1"
-    }
+    },
+	"autoload": {
+        "psr-0": {
+            "ZeTwig": "src/"
+        }
+    },
 }
