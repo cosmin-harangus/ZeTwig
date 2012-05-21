@@ -15,11 +15,6 @@
         "php": ">=5.3.3",
         "twig/twig": "v1.8.1"
     },
-	"extra": {
-        "branch-alias": {
-            "dev-master": "v1.0.x-dev"
-        }
-    },
 	"autoload": {
         "psr-0": {
             "ZeTwig": "src/"
