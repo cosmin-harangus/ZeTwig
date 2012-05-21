@@ -1,0 +1,18 @@
+{
+    "name": "ZendExperts/ZeTwig",
+    "type": "library",
+    "description": "ZeTwig is a Zend Framework 2 module that allows you to use Twig template language (http://twig.sensiolabs.org/) with your projects, with added support for Zend view helpers, php functions, action rendering and event triggering directly from your templates.",
+    "keywords": ["module", "zf2", "view", "templating", "twig"],
+    "homepage": "https://github.com/ZendExperts/ZeTwig",
+    "license": "New BSD",
+    "authors": [
+        {
+            "name": "Cosmin Harangus",
+            "homepage": "http://www.zendexperts.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "twig/twig": "v1.8.1"
+    }
+}
