@@ -72,7 +72,7 @@ later be retrieved from the matched route:
 	{% render "Core:Index:index" with {'param1':1} %}
 	```
 
-1. A tag for triggering an event on the renderer that is similar to the above syntax:
+2. A tag for triggering an event on the renderer that is similar to the above syntax:
 
 	```html
 	{% trigger "myRendererEvent" on myObject with {'param1':1} %}
