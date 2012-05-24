@@ -11,8 +11,9 @@ namespace ZeTwig\View;
 
 use Zend\View\HelperBroker,
     Zend\Loader\Pluggable,
-    Zend\Loader\LocatorAware,
     Zend\Di\LocatorInterface,
+    Zend\ServiceManager\ServiceLocatorAwareInterface,
+    Zend\ServiceManager\ServiceLocatorInterface,
     Twig_Environment,
     Twig_Function_Function as TwigFunction,
 
@@ -24,7 +25,7 @@ use Zend\View\HelperBroker,
  * @package ZeTwig
  * @author Cosmin Harangus <cosmin@zendexperts.com>
  */
-class Environment extends Twig_Environment implements Pluggable, LocatorAware
+class Environment extends Twig_Environment implements Pluggable//, ServiceLocatorAwareInterface
 {
     /**
      * Zend View access broker for all the provided Zend Framework helpers
@@ -73,16 +74,13 @@ class Environment extends Twig_Environment implements Pluggable, LocatorAware
         $this->setBroker( $broker );
     }
 
-    public function setLocator(LocatorInterface $locator)
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
-        $this->_locator = $locator;
+        $this->_locator = $serviceLocator;
         return $this;
     }
 
-    /**
-     * @return \Zend\Di\Di
-     */
-    public function getLocator()
+    public function getServiceLocator()
     {
         return $this->_locator;
     }
@@ -136,12 +134,12 @@ class Environment extends Twig_Environment implements Pluggable, LocatorAware
     /**
      * Get plugin broker instance
      *
-     * @return Zend\Loader\Broker
+     * @return \Zend\Loader\Broker
      */
     public function getBroker()
     {
         if (null === $this->_broker){
-            $this->_broker = $this->getLocator()->get('Zend\View\HelperBroker');
+            $this->_broker = $this->getServiceLocator()->get('Zend\View\HelperBroker');
         }
         return $this->_broker;
     }
@@ -149,7 +147,7 @@ class Environment extends Twig_Environment implements Pluggable, LocatorAware
     /**
      * Set plugin broker instance
      *
-     * @param  string|Broker $broker Plugin broker to load plugins
+     * @param  string|\Zend\Loader\Broker $broker Plugin broker to load plugins
      * @return Zend\Loader\Pluggable
      */
     public function setBroker($broker)

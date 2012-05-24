@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of ZeTwig
  *
@@ -10,60 +9,26 @@
  */
 namespace ZeTwig;
 
-use Zend\Module\Manager,
-    Zend\EventManager\StaticEventManager,
-    Zend\Module\Consumer\AutoloaderProvider,
-    Zend\Module\ModuleEvent,
-    Zend\EventManager\Event;
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface,
+    Zend\Mvc\MvcEvent;
 
 /**
  * ZeTwig Module class
  * @package ZeTwig
  * @author Cosmin Harangus <cosmin@zendexperts.com>
  */
-class Module implements AutoloaderProvider
+class Module implements AutoloaderProviderInterface
 {
     /**
-     * @var \Zend\Mvc\AppContext
+     * @var \Zend\ServiceManager\ServiceManager
      */
-    protected static $application;
+    protected static $serviceManager;
 
-    /**
-     * Module initialization
-     * @param \Zend\Module\Manager $moduleManager
-     */
-    public function init(Manager $moduleManager)
+    public function onBootstrap(MvcEvent $event)
     {
-        $events = StaticEventManager::getInstance();
-        $events->attach('bootstrap', 'bootstrap', array($this, 'bootstrap'), 100);
-    }
-
-    public function bootstrap($event)
-    {
-        // Register a "render" event, at high priority (so it executes prior
-        // to the view attempting to render)
-        $app = $event->getParam('application');
-        static::$application = $app;
-        $app->events()->attach('render', array($this, 'registerTwigStrategy'), 100);
-    }
-
-    public function registerTwigStrategy(Event $event)
-    {
-        $app          = $event->getTarget();
-        $locator      = $app->getLocator();
-        $view         = $locator->get('Zend\View\View');
-        $twigStrategy = $locator->get('ZeTwig\View\Strategy\TwigRendererStrategy');
-
-        $renderer = $twigStrategy->getRenderer();
-        $basePath = $app->getRequest()->getBasePath();
-        $renderer->plugin('basePath')->setBasePath($basePath);
-        $renderer->plugin('url')->setRouter($event->getRouter());
-        $renderer->plugin('headTitle')
-            ->setSeparator(' - ')
-            ->setAutoEscape(false);
-
-        // Attach strategy, which is a listener aggregate, at high priority
-        $view->events()->attach($twigStrategy, 100);
+        // Set the static service manager instance so we can use it everywhere in the module
+        $app = $event->getApplication();
+        static::$serviceManager = $app->getServiceManager();
     }
 
     /**
@@ -80,11 +45,16 @@ class Module implements AutoloaderProvider
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ),
-                'prefixes' => array(
-                    'Twig' => __DIR__ . '/vendor/Twig/lib/Twig'
-                )
             ),
         );
+    }
+
+    /**
+     * Get Service Configuration
+     * @return array
+     */
+    public function getServiceConfiguration(){
+        return include __DIR__ . '/config/service.config.php';
     }
 
     /**
@@ -93,19 +63,18 @@ class Module implements AutoloaderProvider
      */
     public function getConfig()
     {
-        $definitions = include __DIR__ . '/config/module.di.config.php';
         $config = include __DIR__ . '/config/module.config.php';
-        $config = array_merge_recursive($definitions, $config);
         return $config;
     }
 
     /**
+     * Return the ServiceManager instance
      * @static
-     * @return \Zend\Mvc\AppContext
+     * @return \Zend\ServiceManager\ServiceManager
      */
-    public static function getApplication()
+    public static function getServiceManager()
     {
-        return static::$application;
+        return static::$serviceManager;
     }
 
 }

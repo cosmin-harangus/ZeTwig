@@ -4,7 +4,7 @@ namespace ZeTwig\View;
 use Zend\Http\Response,
     Zend\Mvc\Controller\ActionController,
     Zend\View\Model\ModelInterface,
-    Zend\Loader\LocatorAware,
+    Zend\View\Model\ViewModel,
     Zend\Mvc\InjectApplicationEventInterface,
     Zend\EventManager\EventManager,
     Zend\EventManager\EventManagerInterface,
@@ -107,7 +107,8 @@ class Extension extends Twig_Extension
      */
     public function renderAction($expr, $attributes, $options)
     {
-        $application = Module::getApplication();
+        $serviceManager = Module::getServiceManager();
+        $application = $serviceManager->get('Application');
         //parse the name of the controller, action and template directory that should be used
         if (strpos($expr, '/')>0){
             $params = explode('/',$expr);
@@ -121,17 +122,12 @@ class Extension extends Twig_Extension
             $actionName = $params[2];
             $actionName = lcfirst($actionName);
             $actionName = strtolower(preg_replace('/([A-Z])/', '-$1', $actionName));
-            $templateDir = lcfirst($moduleName).'-'.lcfirst($controllerName).'/';
+            $templateDir = lcfirst($moduleName).'/'.lcfirst($controllerName).'/';
             $controllerName = $moduleName.'\\Controller\\'.$controllerName.'Controller';
         }
 
         //instantiate the controller based on the given name
-        $controller = $application->getLocator()->get($controllerName);
-        //inject the locator
-        if ($controller instanceof LocatorAware) {
-            $controller->setLocator($application->getLocator());
-        }
-
+        $controller = $serviceManager->get('ControllerLoader')->get($controllerName);
         //clone the MvcEvent and route and update them with the provided parameters
         $event = $application->getMvcEvent();
         $routeMatch = clone $event->getRouteMatch();
@@ -162,7 +158,7 @@ class Extension extends Twig_Extension
         //if the response is an instance of ViewModel then render that one
         if ($response instanceof ModelInterface){
             $viewModel = $response;
-        }elseif (is_array($response) || $response instanceof \ArrayAccess || $response instanceof \Traversable) {
+        }elseif ($response === null || is_array($response) || $response instanceof \ArrayAccess || $response instanceof \Traversable) {
             $viewModel = new ViewModel($response);
             $viewModel->setTemplate($templateDir . $actionName);
         }else{
@@ -171,18 +167,9 @@ class Extension extends Twig_Extension
         $viewModel->terminate();
         $viewModel->setOption('has_parent',true);
 
-        $view = $application->getLocator()->get('Zend\View\View');
+        $view = $serviceManager->get('Zend\View\View');
         $output = $view->render($viewModel);
         return $output;
     }
 
 }
-
-
-
-
-
-
-
-
-
