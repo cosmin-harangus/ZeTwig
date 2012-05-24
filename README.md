@@ -61,12 +61,12 @@ Apart from the functionality listed above the module adds two extension tags:
    	{% render "Core:Index:index" %}
    	```
 
-The twig tag will call the action "index" from the "IndexController" located within the "Core"
-module and based on the returned value it will either render a specific template or output the
-returned value, following the same principles as with any other zf2 action.
+    The twig tag will call the action "index" from the "IndexController" located within the "Core"
+    module and based on the returned value it will either render a specific template or output the
+    returned value, following the same principles as with any other zf2 action.
 
-Optionally you can also specify different parameters to send to the processed action which can
-later be retrieved from the matched route:
+    Optionally you can also specify different parameters to send to the processed action which can
+    later be retrieved from the matched route:
 
     ```html
 	{% render "Core:Index:index" with {'param1':1} %}
