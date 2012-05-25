@@ -15,13 +15,12 @@ return array(
     'zendexperts_zetwig' => array(
         'template_suffix'       => 'twig',
         'extensions'            => array(
-                'ZeTwig' => 'ZeTwig\View\Extension'
-            ),
+            'ZeTwig' => 'ZeTwig\View\Extension'
+        ),
         'environment_options'   => array(
-                'cache' => BASE_PATH . '/data/cache/twig',
-                'auto_reload' => true,
-                'debug' => true
-            ),
+            'auto_reload' => true,
+            'debug' => true
+        ),
     ),
 
 );

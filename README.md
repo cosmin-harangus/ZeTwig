@@ -28,7 +28,7 @@ The module also defines a set of options that you can change from within the con
             ),
         //set twig environment options
         'environment_options'   => array(
-                'cache' => BASE_PATH . '/data/cache/twig',
+                'cache' => '/tmp',
                 'auto_reload' => true,
                 'debug' => true
             ),
