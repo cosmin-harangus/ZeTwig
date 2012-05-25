@@ -10,7 +10,7 @@ triggering events on an object with different parameters.
 Instalation
 -----------
 
-ZeTwig can be installed using Composer by simply adding the following lines to your composer.json file:
+	ZeTwig can be installed using Composer by simply adding the following lines to your composer.json file:
 
     ```json
     "require": {
@@ -18,9 +18,9 @@ ZeTwig can be installed using Composer by simply adding the following lines to y
     }
     ```
 
-Then run `php composer.phar update`.
+	Then run `php composer.phar update`.
 
-The module also defines a set of options that you can change from within the configuration files:
+	The module also defines a set of options that you can change from within the configuration files:
 
     ```php
     'zendexperts_zetwig' => array(
