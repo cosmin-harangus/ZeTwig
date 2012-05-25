@@ -12,7 +12,7 @@ Instalation
 
 ZeTwig can be installed using Composer by simply adding the following lines to your composer.json file:
 
-    ```json
+    ``` json
     "require": {
         "ZendExperts/ZeTwig": "1.0.*"
     }
@@ -22,7 +22,7 @@ Then run `php composer.phar update`.
 
 The module also defines a set of options that you can change from within the configuration files:
 
-    ```php
+    ``` php
     'zendexperts_zetwig' => array(
         //you can change the extension of the loaded templates here
         'template_suffix'       => 'twig',
@@ -57,7 +57,7 @@ Apart from the functionality listed above the module adds two extension tags:
 1. A tag for rendering a controller action, which follows the Symfony naming conventions
    	or the controller alias:
 
-    ```html
+    ``` html
    	{% render "Core:Index:index" %}
    	```
 
@@ -68,13 +68,13 @@ Apart from the functionality listed above the module adds two extension tags:
     Optionally you can also specify different parameters to send to the processed action which can
     later be retrieved from the matched route:
 
-    ```html
+    ``` html
 	{% render "Core:Index:index" with {'param1':1} %}
 	```
 
 2. A tag for triggering an event on the renderer that is similar to the above syntax:
 
-	```html
+	``` html
 	{% trigger "myRendererEvent" on myObject with {'param1':1} %}
 	```
 	
