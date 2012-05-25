@@ -7,22 +7,22 @@ It also supports aliases for your template names, rendering a particular action 
 within the template files (follows the save naming conventions as Symfony) and 
 triggering events on an object with different parameters.
 
-Instalation
------------
+Installation / Usage
+--------------------
 
-ZeTwig can be installed using Composer by simply adding the following lines to your composer.json file:
+1. ZeTwig can be installed using Composer by simply adding the following lines to your composer.json file:
 
-    ```json
+    ``` json
     "require": {
         "ZendExperts/ZeTwig": "1.0.*"
     }
     ```
 
-Then run `php composer.phar update`.
+2. Then run `php composer.phar update`.
 
-The module also defines a set of options that you can change from within the configuration files:
+3. The module also defines a set of options that you can change from within the configuration files:
 
-    ```php
+    ``` php
     'zendexperts_zetwig' => array(
         //you can change the extension of the loaded templates here
         'template_suffix'       => 'twig',
