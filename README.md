@@ -33,6 +33,19 @@ The module also defines a set of options that you can change from within the con
                 'debug' => true
             ),
     ),
+	
+ZeTwig integrates with the View Manager service and uses the same resolvers defined within that service.
+This allows you to define the template path stacks and maps within the view manager without having to set them again when installing the module:
+
+	'view_manager' => array(
+        'template_path_stack'   => array(
+            'application'              => __DIR__ . '/../views',
+        ),
+        'template_map' => array(
+            'layouts/layout'    => __DIR__ . '/../views/layouts/layout.twig',
+            'index/index'       => __DIR__ . '/../views/application/index/index.twig',
+        ),
+    ), 
     
 Documentation
 -------------
